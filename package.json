@@ -5,8 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "ritik": "node server.js"
+    "ritik": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Ritik Jha",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
