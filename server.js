@@ -1,15 +1,16 @@
 // npm - node package manager
 const http = require("http"); // importing http package in http variable
 
-const port = 9534;
+const port = 9534; // local port no
 
 http
   .createServer((request, response) => {
     response.writeHead(200, { "content-Type": "text/html" });
-    response.write("<h1> Hello, this is a message from server </h1>");
+    response.write(`<h1> Hello, this is a message from server ${port}! </h1>`);
     response.end();
   })
   .listen(port, () => {
+    // callback function
     console.log(`node.js server started on port ${port}`);
   });
 
