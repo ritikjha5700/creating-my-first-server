@@ -3,11 +3,36 @@ const http = require("http"); // importing http package in http variable
 
 const port = 9534; // local port no
 
+const todoList = ["Buy flowers, Play cricket"];
+
 http
-  .createServer((request, response) => {
-    response.writeHead(200, { "content-Type": "text/html" });
-    response.write(`<h1> Hello, this message is from server ${port}! </h1>`);
-    response.end();
+  .createServer((req, res) => {
+    const { method, url } = req;
+    if (url === "/todos") {
+      if (method === "GET") {
+        res.writeHead(200, { "content-Type": "text/html" });
+        res.write(todoList.toString());
+      } else if (method === "POST") {
+        let body = "";
+        req
+          .on("error", (err) => {
+            console.error(err);
+          })
+          .on("data", (chunk) => {
+            body += chunk;
+            console.log(chunk);
+          })
+          .on("end", () => {
+            body = JSON.parse(body);
+            console.log("data: ", body);
+          });
+      } else {
+        res.writeHead(501);
+      }
+    } else {
+      res.writeHead(404);
+    }
+    res.end();
   })
   .listen(port, () => {
     // callback function
