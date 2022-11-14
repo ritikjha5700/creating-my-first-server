@@ -6,7 +6,7 @@ const port = 9534; // local port no
 http
   .createServer((request, response) => {
     response.writeHead(200, { "content-Type": "text/html" });
-    response.write(`<h1> Hello, this is a message from server ${port}! </h1>`);
+    response.write(`<h1> Hello, this message is from server ${port}! </h1>`);
     response.end();
   })
   .listen(port, () => {
