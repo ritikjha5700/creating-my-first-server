@@ -3,7 +3,7 @@ const http = require("http"); // importing http package in http variable
 
 const port = 9534; // local port no
 
-const todoList = ["Buy flowers, Play cricket"];
+const todoList = ["Buy flowers", "Play cricket"];
 
 http
   .createServer((req, res) => {
@@ -24,7 +24,35 @@ http
           })
           .on("end", () => {
             body = JSON.parse(body);
-            console.log("data: ", body);
+            let newtodo = todoList;
+            newtodo.push(body.item);
+            console.log(newtodo);
+            res.writeHead(201);
+          });
+      } else if (method === "DELETE") {
+        let body = "";
+        req
+          .on("error", (err) => {
+            console.error(err);
+          })
+          .on("data", (chunk) => {
+            body += chunk;
+          })
+          .on("end", () => {
+            body = JSON.parse(body);
+            let deleteThis = body.item;
+
+            // for (let i = 0; i < todoList.length; i++) {
+            //   if (todoList[i] === deleteThis) {
+            //     todoList.splice(i, 1);
+            //     break;
+            //   }
+            // }
+
+            todoList.find((element, index) => {
+              if (element === deleteThis) todoList.splice(index, 1);
+            });
+            res.writeHead(204);
           });
       } else {
         res.writeHead(501);
