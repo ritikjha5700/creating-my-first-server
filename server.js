@@ -1,44 +1,51 @@
 // npm - node package manager
-const http = require("http"); // importing http package in http variable
+const express = require("express");
+// initialization
+const app = express();
+// application will now use json format as data.
+app.use(express.json());
 
 const port = 9534; // local port no
 
-const todoList = ["Buy flowers, Play cricket"];
+const todoList = ["Buy coffee", "Play cricket"];
 
-http
-  .createServer((req, res) => {
-    const { method, url } = req;
-    if (url === "/todos") {
-      if (method === "GET") {
-        res.writeHead(200, { "content-Type": "text/html" });
-        res.write(todoList.toString());
-      } else if (method === "POST") {
-        let body = "";
-        req
-          .on("error", (err) => {
-            console.error(err);
-          })
-          .on("data", (chunk) => {
-            body += chunk;
-            console.log(chunk);
-          })
-          .on("end", () => {
-            body = JSON.parse(body);
-            console.log("data: ", body);
-          });
-      } else {
-        res.writeHead(501);
-      }
-    } else {
-      res.writeHead(404);
-    }
-    res.end();
-  })
-  .listen(port, () => {
-    // callback function
-    console.log(`node.js server started on port ${port}`);
+// http://localhost:9534/todos
+app.get("/todos", (req, res) => {
+  //callback
+  res.status(200).send(todoList);
+});
+
+app.post("/todos", (req, res) => {
+  //callback
+  let newTodoItem = req.body.item;
+  todoList.push(newTodoItem);
+  res.status(201).send({
+    message: "Task added successfully",
   });
+});
 
-// http://localhost:9534
+app.delete("/todos", (req, res) => {
+  //callback
+  const itemToDelete = req.body.item;
+
+  todoList.find((element, index) => {
+    if (element === itemToDelete) todoList.splice(index, 1);
+  });
+  res.status(202).send({
+    message: `Deleted items: "${req.body.item}"`,
+  });
+});
+
+// under all, all the other methods (on the particular route )like put, patch etc will fall
+app.all("/todos", (req, res) => {
+  res.status(501).send();
+});
+
+app.listen(port, () => {
+  // callback
+  console.log(`nodejs server started at port ${port}`);
+});
+
+// http://localhost:9534/todos
 // "_comment1": "start is a predefined keyword, so to run: (npm start) will work",
 // "_comment2": "ritik is not a predefined keyword, so to run: (npm run ritik) will work"
